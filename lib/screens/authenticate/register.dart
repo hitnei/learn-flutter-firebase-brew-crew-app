@@ -13,10 +13,12 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
 
   // text field state
   String email = '';
   String password = '';
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -37,21 +39,24 @@ class _RegisterState extends State<Register> {
         ]
       ),
       body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
           child: Form(
-              child: Column(
+            key: _formKey,
+            child: Column(
             children: <Widget>[
               SizedBox(height: 20),
               TextFormField(
+                validator: (val) => val.isEmpty ? 'Enter an email' : null,
                 onChanged: (val) {
-                  setState(() => email = val);
+                  setState(() => {email = val, error = ''});
                 },
               ),
               SizedBox(height: 20),
               TextFormField(
                 obscureText: true,
+                validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                 onChanged: (val) {
-                  setState(() => password = val);
+                  setState(() => {password = val, error = ''});
                 },
               ),
               SizedBox(height: 20),
@@ -62,9 +67,24 @@ class _RegisterState extends State<Register> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  print(email);
-                  print(password);
-                })
+                  if (_formKey.currentState.validate()) {
+                    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                    if (result['isError']) {
+                      setState(() => error = result['errMess']);
+                    } else {
+                      print('result: ${result.data}');
+                    }
+                  }
+                }
+              ),
+              SizedBox(height: 12),
+              Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                ),
+              ),
             ],
           )
         )
