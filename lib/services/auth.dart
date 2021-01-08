@@ -26,7 +26,7 @@ class AuthService {
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user;
       
-      await DatbaseService(uid: user.uid).updateUserData('0', 'new crew menber', 100);
+      await DatbaseService(uid: user.uid).updateUserData('0', 'new crew member', 100);
       
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -59,7 +59,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: pasword);
       User user = result.user;
 
-      await DatbaseService(uid: user.uid).updateUserData('0', 'new crew menber', 100);
+      await DatbaseService(uid: user.uid).updateUserData('0', 'new crew member', 100);
 
       return {
         'data': _userFromFirebaseUser(user),

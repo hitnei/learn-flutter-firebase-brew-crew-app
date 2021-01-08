@@ -81,7 +81,7 @@ class _SignInState extends State<SignIn> {
                         loading = false;
                       });
                     } else {
-                      print('result: ${result.data}');
+                      print('result: $result');
                     }
                   }
                 }
